@@ -1,13 +1,9 @@
 # SRPManager - AppLocker Management Utility
 
-- **Version:** 2.2.4
-- **Author:** Vladimirs Kuznecovs
-- **License:** Copyright © 2026 Vladimir Kuznetsov
+## Overview
+<img width="2400" height="1667" alt="srpmanager-overview" src="https://github.com/user-attachments/assets/49f9a21f-443e-4fe8-91f2-e0b375df347e" />
 
 ---
-
-## Overview
-
 SRPManager is a system-tray utility for monitoring and managing Windows [AppLocker](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/applocker/applocker-overview) policy.
 It lets administrators enable or disable AppLocker enforcement, view active rules, run `GPUpdate /force`, temporarily freeze the policy state, and inspect both standard and packaged-app (AppX) AppLocker events - all from the notification area or the command line. With **remote options** enabled, a **Host** selector at the top of the tray menu retargets every action at another machine over WinRM.
 
