@@ -1,6 +1,15 @@
-# SRPManager - AppLocker Management Utility
-
 ## Overview
+
+**SRPManager** is a lightweight Windows AppLocker administration tool for sysadmins who need fast visibility and control without opening MMC or Event Viewer.
+
+It allows you to:
+- Monitor AppLocker state from the system tray
+- Inspect effective policy rules
+- Search and analyze AppLocker events, apply filters to them
+- Enable/disable/freeze policy
+- Run GPUpdate to refresh policies
+- Manage remote machines over WinRM
+
 <img width="2400" height="1667" alt="srpmanager-overview" src="https://github.com/user-attachments/assets/49f9a21f-443e-4fe8-91f2-e0b375df347e" />
 
 ---
