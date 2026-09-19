@@ -1,0 +1,48 @@
+<!-- Default baseline AppLocker policy XML with Microsoft recommended rules and exclusions. 
+This policy is created and used by SRPManager.exe
+You can edit this XML to customize the rules that are applied by SRPManager
+
+!!! DO NOT RENAME THIS FILE !!!
+
+The way this policy works is by allowing ALL executables, scripts, MSI installers, DLLs, and packaged apps for ANY user.
+This effectively disables AppLocker, as there are no restrictions on what can be run. However, Deny rules would still be effective. 
+
+Author: Vladimir Kuznetsov
+Policy version: 2026-04-20 -->
+
+<AppLockerPolicy Version="1">
+  <RuleCollection Type="Exe" EnforcementMode="NotConfigured">
+    <FilePathRule Id="4daf9e57-14a0-44c7-93cf-e7b182c665c4" Name="*" Description="Allow Everyone any executable" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="*" />
+      </Conditions>
+    </FilePathRule>
+  </RuleCollection>
+  
+  <RuleCollection Type="Msi" EnforcementMode="NotConfigured">
+    <FilePathRule Id="d98d7739-545d-48b2-881b-f8f2374219a4" Name="*" Description="Allow Everyone any MSI installer" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="*" />
+      </Conditions>
+    </FilePathRule>
+  </RuleCollection>
+
+  <RuleCollection Type="Script" EnforcementMode="NotConfigured">
+    <FilePathRule Id="cf8fcc08-eaa2-4575-ba20-189a7264a83b" Name="*" Description="Allow Everyone any script" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="*" />
+      </Conditions>
+    </FilePathRule>
+  </RuleCollection>
+
+  <RuleCollection Type="Appx" EnforcementMode="NotConfigured">
+    <FilePublisherRule Id="a9e18c21-ff8f-43cf-b9fc-db40eed693ba" Name="*" Description="Allow Everyone any packaged app" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePublisherCondition PublisherName="*" ProductName="*" BinaryName="*">
+          <BinaryVersionRange LowSection="0.0.0.0" HighSection="*" />
+        </FilePublisherCondition>
+      </Conditions>
+    </FilePublisherRule>
+  </RuleCollection>
+
+</AppLockerPolicy>

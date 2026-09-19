@@ -1,0 +1,71 @@
+# Build results
+bin/
+obj/
+Debug/
+Release/
+out/
+
+# Visual Studio / Rider / IDE files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.ncrunch*
+*.ide.*
+*.resharper
+_ReSharper*/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+packages/
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Claude Code
+.claude/
+
+# Publish outputs
+*.Publish.xml
+*.deploy.cmd
+*.deploy-readme.txt
+*.dbmdl
+*.pdb
+*.cache
+*.log
+*.zip
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dotnet temporary
+*.dll
+*.exe
+*.app
+*.vsix
+*.psess
+*.vsp
+*.vspx
+*.sap
+*.userprefs
+*.ilk
+*.idb
+TestResults/
+BenchmarkDotNet.Artifacts/
+
+# Sensitive data / local settings
+appsettings.Local.json
+secrets.json
+.env

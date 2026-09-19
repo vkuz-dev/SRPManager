@@ -1,0 +1,16 @@
+<!-- Default baseline AppLocker policy XML with Microsoft recommended rules and exclusions. 
+This policy is created and used by SRPManager.exe
+You can edit this XML to customize the rules that are applied by SRPManager
+
+!!! DO NOT RENAME THIS FILE !!!
+
+Author: Vladimir Kuznetsov
+Policy version: 2026-04-20 -->
+
+<AppLockerPolicy Version="1">
+  <RuleCollection Type="Exe" EnforcementMode="NotConfigured" />
+  <RuleCollection Type="Msi" EnforcementMode="NotConfigured" />
+  <RuleCollection Type="Script" EnforcementMode="NotConfigured" />
+  <RuleCollection Type="Appx" EnforcementMode="NotConfigured" />
+  <RuleCollection Type="Dll" EnforcementMode="NotConfigured" />
+</AppLockerPolicy>

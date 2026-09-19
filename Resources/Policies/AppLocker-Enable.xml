@@ -1,0 +1,208 @@
+<!-- Default baseline AppLocker policy XML with Microsoft recommended rules and exclusions. 
+This policy is created and used by SRPManager.exe
+You can edit this XML to customize the rules that are applied by SRPManager
+
+!!! DO NOT RENAME THIS FILE !!!
+
+Author: Vladimir Kuznetsov
+Policy version: 2026-04-20 -->
+
+<AppLockerPolicy Version="1">
+  
+  <RuleCollection Type="Exe" EnforcementMode="Enabled">
+    <FilePathRule Id="29585d1c-2515-4d60-9c25-045e9eae63b5" Name="%WINDIR%\*" Description="" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%WINDIR%\*" />
+      </Conditions>
+      <Exceptions>
+        <!-- User Writable Paths -->
+        <FilePathCondition Path="%WINDIR%\debug\WIA\*" />
+        <FilePathCondition Path="%WINDIR%\Registration\CRMLog\*" />
+        <FilePathCondition Path="%WINDIR%\System32\Com\dmp\*" />
+        <FilePathCondition Path="%WINDIR%\System32\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\SysWOW64\Com\dmp\*" />
+        <FilePathCondition Path="%WINDIR%\SysWOW64\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\Temp\*" />
+        <FilePathCondition Path="%WINDIR%\tracing\*" />
+
+        <!-- Custom rules -->
+        <FilePathCondition Path="%WINDIR%\*\regsrv32.exe" />
+
+        <!-- Microsoft recommended exclusions (apps that can be used to bypass AppLocker) -->
+        <!-- https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol -->
+        <FilePathCondition Path="%WINDIR%\*\addinprocess.exe" />
+        <FilePathCondition Path="%WINDIR%\*\addinprocess32.exe" />
+        <FilePathCondition Path="%WINDIR%\*\addinutil.exe" />
+        <FilePathCondition Path="%WINDIR%\*\aspnet_compiler.exe" />
+        <FilePathCondition Path="%WINDIR%\*\bash.exe" />
+        <FilePathCondition Path="%WINDIR%\*\cdb.exe" />
+        <FilePathCondition Path="%WINDIR%\*\cscript.exe" />
+        <FilePathCondition Path="%WINDIR%\*\csi.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dbghost.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dbgsvc.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dbgsrv.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dnx.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dotnet.exe" />
+        <FilePathCondition Path="%WINDIR%\*\fsi.exe" />
+        <FilePathCondition Path="%WINDIR%\*\fsiAnyCpu.exe" />
+        <FilePathCondition Path="%WINDIR%\*\infdefaultinstall.exe" />
+        <FilePathCondition Path="%WINDIR%\*\kd.exe" />
+        <FilePathCondition Path="%WINDIR%\*\kill.exe" />
+        <FilePathCondition Path="%WINDIR%\*\lxrun.exe" />
+        <FilePathCondition Path="%WINDIR%\*\Microsoft.Workflow.Compiler.exe" />
+        <FilePathCondition Path="%WINDIR%\*\msbuild.exe" />
+        <FilePathCondition Path="%WINDIR%\*\mshta.exe" />
+        <FilePathCondition Path="%WINDIR%\*\ntkd.exe" />
+        <FilePathCondition Path="%WINDIR%\*\ntsd.exe" />
+        <FilePathCondition Path="%WINDIR%\*\powershellcustomhost.exe" />
+        <FilePathCondition Path="%WINDIR%\*\rcsi.exe" />
+        <FilePathCondition Path="%WINDIR%\*\runscripthelper.exe" />
+        <FilePathCondition Path="%WINDIR%\*\texttransform.exe" />
+        <FilePathCondition Path="%WINDIR%\*\visualuiaverifynative.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wfc.exe" />
+        <FilePathCondition Path="%WINDIR%\*\windbg.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wmic.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wscript.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wsl.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wslconfig.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wslhost.exe" />
+      </Exceptions>
+    </FilePathRule>
+    <FilePathRule Id="419a5aac-9ed6-4ccd-9d01-b0ef3d38fcaf" Name="%PROGRAMFILES%\*" Description="Allows members of the Everyone group to run applications that are located in the Program Files folder." UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%PROGRAMFILES%\*" />
+      </Conditions>
+    </FilePathRule>
+    <FilePathRule Id="d968727b-5e7f-42c5-91bf-81c4c0a1d762" Name="%WINDIR%\*" Description="" UserOrGroupSid="S-1-5-32-544" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%WINDIR%\*" />
+      </Conditions>
+    </FilePathRule>
+    <FilePublisherRule Id="08c4c16b-2585-4c9e-94bb-99fb3604c0e3" Name="Windows executables signed by Microsoft" Description="" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePublisherCondition PublisherName="O=MICROSOFT CORPORATION, L=REDMOND, S=WASHINGTON, C=US" ProductName="MICROSOFT® WINDOWS® OPERATING SYSTEM" BinaryName="*">
+          <BinaryVersionRange LowSection="*" HighSection="*" />
+        </FilePublisherCondition>
+      </Conditions>
+      <Exceptions>
+        <!-- Custom rules -->
+        <FilePathCondition Path="%WINDIR%\*\regsrv32.exe" />
+        
+        <!-- Microsoft recommended exclusions (apps that can be used to bypass AppLocker) -->
+        <!-- https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol -->
+        <FilePathCondition Path="%WINDIR%\*\addinprocess.exe" />
+        <FilePathCondition Path="%WINDIR%\*\addinprocess32.exe" />
+        <FilePathCondition Path="%WINDIR%\*\addinutil.exe" />
+        <FilePathCondition Path="%WINDIR%\*\aspnet_compiler.exe" />
+        <FilePathCondition Path="%WINDIR%\*\bash.exe" />
+        <FilePathCondition Path="%WINDIR%\*\cdb.exe" />
+        <FilePathCondition Path="%WINDIR%\*\cscript.exe" />
+        <FilePathCondition Path="%WINDIR%\*\csi.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dbghost.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dbgsvc.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dbgsrv.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dnx.exe" />
+        <FilePathCondition Path="%WINDIR%\*\dotnet.exe" />
+        <FilePathCondition Path="%WINDIR%\*\fsi.exe" />
+        <FilePathCondition Path="%WINDIR%\*\fsiAnyCpu.exe" />
+        <FilePathCondition Path="%WINDIR%\*\infdefaultinstall.exe" />
+        <FilePathCondition Path="%WINDIR%\*\kd.exe" />
+        <FilePathCondition Path="%WINDIR%\*\kill.exe" />
+        <FilePathCondition Path="%WINDIR%\*\lxrun.exe" />
+        <FilePathCondition Path="%WINDIR%\*\Microsoft.Workflow.Compiler.exe" />
+        <FilePathCondition Path="%WINDIR%\*\msbuild.exe" />
+        <FilePathCondition Path="%WINDIR%\*\mshta.exe" />
+        <FilePathCondition Path="%WINDIR%\*\ntkd.exe" />
+        <FilePathCondition Path="%WINDIR%\*\ntsd.exe" />
+        <FilePathCondition Path="%WINDIR%\*\powershellcustomhost.exe" />
+        <FilePathCondition Path="%WINDIR%\*\rcsi.exe" />
+        <FilePathCondition Path="%WINDIR%\*\runscripthelper.exe" />
+        <FilePathCondition Path="%WINDIR%\*\texttransform.exe" />
+        <FilePathCondition Path="%WINDIR%\*\visualuiaverifynative.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wfc.exe" />
+        <FilePathCondition Path="%WINDIR%\*\windbg.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wmic.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wscript.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wsl.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wslconfig.exe" />
+        <FilePathCondition Path="%WINDIR%\*\wslhost.exe" />
+      </Exceptions>
+    </FilePublisherRule>
+  </RuleCollection>
+
+  <RuleCollection Type="Msi" EnforcementMode="Enabled">
+    <FilePathRule Id="5c8e0d0e-d6c9-4cb7-8bc5-137f6aee2398" Name="%WINDIR%\*" Description="" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%WINDIR%\*" />
+      </Conditions>
+      <Exceptions>
+        <!-- User Writable Paths -->
+        <FilePathCondition Path="%WINDIR%\debug\WIA\*" />
+        <FilePathCondition Path="%WINDIR%\Registration\CRMLog\*" />
+        <FilePathCondition Path="%WINDIR%\System32\Com\dmp\*" />
+        <FilePathCondition Path="%WINDIR%\System32\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\SysWOW64\Com\dmp\*" />
+        <FilePathCondition Path="%WINDIR%\SysWOW64\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\Temp\*" />
+        <FilePathCondition Path="%WINDIR%\tracing\*" />
+      </Exceptions>
+    </FilePathRule>
+  </RuleCollection>
+
+  <RuleCollection Type="Script" EnforcementMode="Enabled">
+    <FilePathRule Id="114a84d5-5276-43fb-abba-2e64c18fae00" Name="PSScriptPolicyTest_*" Description="Allow to avoid constrained mode for Powershell" UserOrGroupSid="S-1-5-32-544" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%OSDRIVE%\Users\*\AppData\Local\Temp\*\__PSScriptPolicyTest_*" />
+      </Conditions>
+    </FilePathRule>
+    <FilePathRule Id="29c90c2f-f794-41c6-9044-ce66b68cbd1e" Name="%PROGRAMFILES%\*" Description="Allows members of the Everyone group to run scripts that are located in the Program Files folder." UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%PROGRAMFILES%\*" />
+      </Conditions>
+    </FilePathRule>
+    <FilePathRule Id="b9207046-c0b5-457e-b696-31016c661fb0" Name="%WINDIR%\*" Description="" UserOrGroupSid="S-1-5-32-544" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%WINDIR%\*" />
+      </Conditions>
+    </FilePathRule>
+    <FilePathRule Id="c5b84349-e838-468b-b229-1d45702c5df3" Name="%WINDIR%\*" Description="Allows members of the Everyone group to run scripts that are located in the Windows folder." UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePathCondition Path="%WINDIR%\*" />
+      </Conditions>
+      <Exceptions>
+        <!-- User Writable Paths -->
+        <FilePathCondition Path="%WINDIR%\debug\WIA\*" />
+        <FilePathCondition Path="%WINDIR%\Registration\CRMLog\*" />
+        <FilePathCondition Path="%WINDIR%\System32\Com\dmp\*" />
+        <FilePathCondition Path="%WINDIR%\System32\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\SysWOW64\Com\dmp\*" />
+        <FilePathCondition Path="%WINDIR%\SysWOW64\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\Tasks\*" />
+        <FilePathCondition Path="%WINDIR%\Temp\*" />
+        <FilePathCondition Path="%WINDIR%\tracing\*" />
+      </Exceptions> 
+    </FilePathRule>
+  </RuleCollection>
+
+  <RuleCollection Type="Appx" EnforcementMode="Enabled">
+    <FilePublisherRule Id="51e0facc-9ed5-4ba0-b5a9-47fe6a84c92b" Name="Signed by Microsoft Corporation" Description="" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePublisherCondition PublisherName="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" ProductName="*" BinaryName="*">
+          <BinaryVersionRange LowSection="*" HighSection="*" />
+        </FilePublisherCondition>
+      </Conditions>
+    </FilePublisherRule>
+    <FilePublisherRule Id="828487d1-27d7-41e5-ae93-25e150f4fd57" Name="Signed by Microsoft Corporation | Windows" Description="" UserOrGroupSid="S-1-1-0" Action="Allow">
+      <Conditions>
+        <FilePublisherCondition PublisherName="CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" ProductName="*" BinaryName="*">
+          <BinaryVersionRange LowSection="*" HighSection="*" />
+        </FilePublisherCondition>
+      </Conditions>
+    </FilePublisherRule>
+  </RuleCollection>
+
+  <RuleCollection Type="Dll" EnforcementMode="NotConfigured" />
+  
+</AppLockerPolicy>

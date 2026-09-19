@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net462-windows</TargetFramework>
+    <LangVersion>latestMajor</LangVersion>
+
+    <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>WinExe</OutputType>
+
+    <Product>SRPManager</Product>
+    <Copyright>© 2026 Vladimir Kuznetsov</Copyright>
+
+    <Company>Vladimir Kuznetsov</Company>
+    <Authors>Vladimir Kuznetsov</Authors>
+    <Description>Tray utility for monitoring and managing Windows AppLocker policy.</Description>
+    <PackageProjectUrl>https://github.com/vkuz-dev/SRPManager</PackageProjectUrl>
+
+    <AssemblyName>SRPManager</AssemblyName>
+    <AssemblyTitle>SRPManager</AssemblyTitle>
+
+    <RootNamespace>AWLM</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <!-- VERSIONING -->
+    <Version>2.3.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <InformationalVersion>$(Version)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+
+    <!-- BUILD -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+    <ApplicationIcon>SRPManager.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ServiceController lives in the framework's own System.ServiceProcess.dll on .NET
+         Framework. The NuGet package only dragged in unused sidecar DLLs. -->
+    <Reference Include="System.ServiceProcess" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Policies\*.xml" />
+    <EmbeddedResource Include="Resources\Icons\*.ico" />
+    <EmbeddedResource Include="Resources\Addons\*.*" />
+  </ItemGroup>
+
+</Project>

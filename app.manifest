@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+ 
+  <!-- Enable Windows visual styles -->
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*" />
+    </dependentAssembly>
+  </dependency>
+
+  <!-- Run with whatever rights the caller has. Deliberately NOT requireAdministrator: the tray
+       icon, log viewer and rules viewer are all useful without elevation, and forcing a UAC
+       prompt at every login would make "Run at startup" unusable. Actions that genuinely need
+       admin check StatusChecker.IsProcessElevated() and offer "Run as Administrator" instead. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <!-- Windows compatibility -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/> <!-- Windows 10 / 11 -->
+      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f0f3c7e3}"/> <!-- Windows 8.1 -->
+    </application>
+  </compatibility>
+
+  <!-- No dpiAware/dpiAwareness entry on purpose. Those are OS-level declarations that take
+       effect regardless of target framework, but WinForms on .NET Framework 4.6.2 has no
+       high-DPI rescaling to back them up: the app would tell Windows "don't scale me" and
+       then fail to scale itself, which is worse than the shell's bitmap stretch. Restore
+       them together with the App.config DpiAwareness key if this ever targets 4.7+. -->
+</assembly>
