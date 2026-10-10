@@ -96,9 +96,8 @@ namespace AWLM.Core
                 "These actions use your current Windows credentials." },
 
             // About
-            { "about.title",            "About" },
+            { "about.title",            "About | SRPManager v{version}" },
             { "about.body",
-                "SRPManager v{version}\n\n" +
                 "Current user: {user}\n\n" +
 
                 "Utility for monitoring and managing AppLocker state.\n\n" +

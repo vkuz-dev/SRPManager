@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -424,14 +425,16 @@ namespace AWLM
         // About
         private void OnAbout(object sender, EventArgs e)
         {
+            Version ver = Assembly.GetExecutingAssembly().GetName().Version;
+            string title = Strings.Get("about.title")
+                .Replace("{version}", $"{ver.Major}.{ver.Minor}.{ver.Build}");
 
             string body = Strings.Get("about.body")
-                .Replace("{version}", AppBuildVersion.Version)
                 .Replace("{user}", StatusChecker.GetCurrentUserName());
 
             MessageBox.Show(
                 body,
-                Strings.Get("about.title"),
+                title,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
