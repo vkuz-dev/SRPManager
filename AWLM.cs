@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,6 +22,8 @@ namespace AWLM
         private StatusMenuItems _statusMenuItems;
         private string _currentHost; // null = localhost
         private bool _statusRefreshInFlight;
+
+        private const string GitHubUrl = "https://github.com/vkuz-dev/SRPManager";
 
         // Construction / disposal
         public AWLM_App()
@@ -432,11 +435,76 @@ namespace AWLM
             string body = Strings.Get("about.body")
                 .Replace("{user}", StatusChecker.GetCurrentUserName());
 
-            MessageBox.Show(
-                body,
-                title,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            // Spacing is derived from the font so it follows DPI and font settings
+            int gap = Control.DefaultFont.Height;
+
+            using (Icon appIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath))
+            using (Bitmap appImage = appIcon.ToBitmap())
+            using (var form = new Form
+            {
+                Text = title,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterScreen,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Padding = new Padding(gap),
+                Icon = appIcon
+            })
+            {
+
+                var about = new Label
+                {
+                    Text = body,
+                    AutoSize = true
+                };
+
+                var link = new LinkLabel
+                {
+                    Text = GitHubUrl,
+                    AutoSize = true
+                };
+                link.LinkClicked += (s, a) => OpenLink(GitHubUrl);
+
+                var okButton = new Button
+                {
+                    Text = Strings.Get("button.ok"),
+                    DialogResult = DialogResult.OK,
+                    AutoSize = true,
+                    Anchor = AnchorStyles.Right
+                };
+
+                // Icon on the left; text, link and button stacked on the right
+                var layout = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    AutoSize = true,
+                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    ColumnCount = 2,
+                    RowCount = 3
+                };
+                layout.Controls.Add(about, 1, 0);
+                layout.Controls.Add(link, 1, 1);
+                layout.Controls.Add(okButton, 1, 2);
+
+                form.Controls.Add(layout);
+                form.AcceptButton = okButton;
+                form.CancelButton = okButton;
+                form.ShowDialog();
+            }
+        }
+
+        private static void OpenLink(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Failed to open link:\n\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Exit

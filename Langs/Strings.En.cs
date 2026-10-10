@@ -102,9 +102,9 @@ namespace AWLM.Core
 
                 "Utility for monitoring and managing AppLocker state.\n\n" +
 
-                "Application whitelisting, when properly configured, can significantly improve system security by reducing the attack surface and restricting execution to trusted software and paths.\n\n" +
-                "The AppLocker policies used by this program are located at:\n" +
-                "C:\\Windows\\AppLocker\\Policies\n\n" +
+                "Application whitelisting, when properly configured,\n" +
+                "can significantly improve system security by reducing the attack surface\n" + 
+                "and restricting execution to trusted software and paths.\n\n" +
 
                 "Command-line usage is supported. Use /? for help.\n\n" +
 
@@ -113,8 +113,7 @@ namespace AWLM.Core
                 "\n\n──── Developer ─────────────────────────\n" +
                 "Vladimir Kuznetsov\n" +
                 "Email: vladimir.kuznetsov0706@gmail.com\n" +
-                "GitHub: https://github.com/vkuz-dev/SRPManager\n\n" +
-                "Copyright © 2026 Vladimir Kuznetsov"
+                "Copyright © 2026 Vladimir Kuznetsov\n\n"
                 }
         };
     }
