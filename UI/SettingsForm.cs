@@ -68,7 +68,6 @@ namespace AWLM.UI
             this.MinimizeBox = false;
             this.ShowInTaskbar = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Padding = new Padding(12);
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
@@ -79,8 +78,7 @@ namespace AWLM.UI
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 ColumnCount = 1,
-                RowCount = 0, // grown dynamically below
-                Padding = new Padding(0)
+                RowCount = 0 // grown dynamically below
             };
             rootLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
@@ -90,9 +88,7 @@ namespace AWLM.UI
                 Text = Strings.Get("settings.behaviorGroup"),
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Fill,
-                Padding = new Padding(6, 4, 6, 6),
-                Margin = new Padding(0, 0, 0, 8)
+                Dock = DockStyle.Fill
             };
 
             var behaviorLayout = new FlowLayoutPanel
@@ -101,29 +97,25 @@ namespace AWLM.UI
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 WrapContents = false,
-                Dock = DockStyle.Fill,
-                Padding = new Padding(4, 2, 4, 2)
+                Dock = DockStyle.Fill
             };
 
             _chkStartup = new CheckBox
             {
                 Text = Strings.Get("settings.startupToggle"),
-                AutoSize = true,
-                Margin = new Padding(0, 4, 0, 2)
+                AutoSize = true
             };
 
             _chkPinTray = new CheckBox
             {
                 Text = Strings.Get("settings.trayToggle"),
-                AutoSize = true,
-                Margin = new Padding(0, 2, 0, 2)
+                AutoSize = true
             };
 
             _chkRemoteManagement = new CheckBox
             {
                 Text = Strings.Get("settings.remoteManagementToggle"),
-                AutoSize = true,
-                Margin = new Padding(0, 2, 0, 2)
+                AutoSize = true
             };
 
             behaviorLayout.Controls.Add(_chkStartup);
@@ -148,7 +140,6 @@ namespace AWLM.UI
                 {
                     Text = baseText,
                     AutoSize = true,
-                    Margin = new Padding(0, 2, 0, 2),
                     Enabled = !(_isLocalFilesDeployed || !_isRunningAsAdmin),
                     Checked = _isLocalFilesDeployed
                 };
@@ -170,9 +161,7 @@ namespace AWLM.UI
                 Text = Strings.Get("settings.shortcutsGroup"),
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Fill,
-                Padding = new Padding(6, 4, 6, 6),
-                Margin = new Padding(0, 0, 0, 8)
+                Dock = DockStyle.Fill
             };
 
             var shortcutsLayout = new FlowLayoutPanel
@@ -181,22 +170,19 @@ namespace AWLM.UI
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 WrapContents = false,
-                Dock = DockStyle.Fill,
-                Padding = new Padding(4, 2, 4, 2)
+                Dock = DockStyle.Fill
             };
 
             _chkDesktopShortcut = new CheckBox
             {
                 Text = Strings.Get("settings.desktopShortcut"),
-                AutoSize = true,
-                Margin = new Padding(0, 4, 0, 2)
+                AutoSize = true
             };
 
             _chkStartMenuShortcut = new CheckBox
             {
                 Text = Strings.Get("settings.startMenuShortcut"),
-                AutoSize = true,
-                Margin = new Padding(0, 2, 0, 2)
+                AutoSize = true
             };
 
             shortcutsLayout.Controls.Add(_chkDesktopShortcut);
@@ -213,9 +199,7 @@ namespace AWLM.UI
                 Text = Strings.Get("settings.languageGroup"),
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Fill,
-                Padding = new Padding(6, 4, 6, 6),
-                Margin = new Padding(0, 0, 0, 8)
+                Dock = DockStyle.Fill
             };
 
             var langLayout = new FlowLayoutPanel
@@ -224,8 +208,7 @@ namespace AWLM.UI
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 WrapContents = false,
-                Dock = DockStyle.Fill,
-                Padding = new Padding(4, 4, 4, 4)
+                Dock = DockStyle.Fill
             };
 
             var lblLang = new Label
@@ -233,15 +216,13 @@ namespace AWLM.UI
                 Text = Strings.Get("settings.languageLabel"),
                 AutoSize = true,
                 Anchor = AnchorStyles.Left,
-                TextAlign = ContentAlignment.MiddleLeft,
-                Margin = new Padding(0, 4, 6, 0)
+                TextAlign = ContentAlignment.MiddleLeft
             };
 
             _cmbLanguage = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 180,
-                Margin = new Padding(0, 2, 0, 2)
+                AutoSize = true
             };
             _cmbLanguage.Items.Add(new LanguageItem("en", "English"));
             _cmbLanguage.Items.Add(new LanguageItem("lv", "Latviešu"));
@@ -263,23 +244,20 @@ namespace AWLM.UI
                 FlowDirection = FlowDirection.RightToLeft,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0)
+                Dock = DockStyle.Fill
             };
 
             _btnCancel = new Button
             {
                 Text = Strings.Get("button.cancel"),
                 DialogResult = DialogResult.Cancel,
-                Size = new Size(80, 26),
-                Margin = new Padding(0)
+                AutoSize = true
             };
             _btnOk = new Button
             {
                 Text = Strings.Get("button.ok"),
                 DialogResult = DialogResult.OK,
-                Size = new Size(80, 26),
-                Margin = new Padding(0, 0, 6, 0)
+                AutoSize = true
             };
 
             buttonPanel.Controls.Add(_btnCancel);
@@ -296,7 +274,7 @@ namespace AWLM.UI
             _btnOk.Click += (s, e) => ApplyAndClose();
             _btnCancel.Click += (s, e) => this.Close();
 
-            this.MinimumSize = new Size(380, 0);
+            this.MinimumSize = new Size(300, 0);
         }
 
         private void LoadCurrentValues()
