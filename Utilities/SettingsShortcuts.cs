@@ -51,6 +51,13 @@ namespace AWLM.Utilities
 
         // ── Shared ────────────────────────────────────────────────────────────
 
+        /// <summary>Re-points existing per-user shortcuts at the running exe.</summary>
+        public static void Refresh()
+        {
+            ShellShortcut.RefreshIn(UserDesktop, ShortcutDescription);
+            ShellShortcut.RefreshIn(UserStartMenu, ShortcutDescription);
+        }
+
         /// <summary>
         /// Adds or removes the per-user shortcut. Returns false if the request could not be
         /// honoured — either an all-users shortcut owns the slot, or the write failed.

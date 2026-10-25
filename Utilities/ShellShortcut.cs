@@ -12,9 +12,8 @@ namespace AWLM.Utilities
     /// </summary>
     public static class ShellShortcut
     {
-        /// <summary>Full path of the running executable.</summary>
-        public static string AppProcessPath =>
-            System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+        /// <summary>The exe shortcuts point at: the running one, or the alias when packaged.</summary>
+        public static string AppProcessPath => PackageInfo.LaunchPath;
 
         /// <summary>File name of the running executable, without extension.</summary>
         public static string AppBaseName =>
@@ -44,6 +43,18 @@ namespace AWLM.Utilities
         }
 
         public static bool ExistsIn(string folder) => FindIn(folder) != null;
+
+        /// <summary>
+        /// Points an existing shortcut in <paramref name="folder"/> at the running exe again.
+        /// It goes stale when the exe moves: a package update, or a switch between the exe and
+        /// the Store version.
+        /// </summary>
+        public static void RefreshIn(string folder, string description = null)
+        {
+            string found = FindIn(folder);
+            if (found != null)
+                Create(found, AppProcessPath, description);
+        }
 
         /// <summary>Removes this app's shortcut from <paramref name="folder"/> if present.</summary>
         public static bool RemoveFrom(string folder)
@@ -87,7 +98,8 @@ namespace AWLM.Utilities
 
                 SetProperty(scType, sc, "TargetPath", targetPath);
                 SetProperty(scType, sc, "WorkingDirectory", Path.GetDirectoryName(targetPath));
-                SetProperty(scType, sc, "IconLocation", targetPath + ",0");
+                // From the real exe: when packaged, the target is an alias with no icon.
+                SetProperty(scType, sc, "IconLocation", PackageInfo.ExePath + ",0");
 
                 if (!string.IsNullOrEmpty(description))
                     SetProperty(scType, sc, "Description", description);

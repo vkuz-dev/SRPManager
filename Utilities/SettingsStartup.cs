@@ -25,6 +25,9 @@ namespace AWLM.Utilities
             return ShellShortcut.ExistsIn(GlobalStartupFolder);
         }
 
+        /// <summary>Re-points an existing per-user startup shortcut at the running exe.</summary>
+        public static void Refresh() => ShellShortcut.RefreshIn(UserStartupFolder);
+
         public static void SetStartup(bool enable)
         {
             // Always clear the per-user entry first, so a re-enable rewrites it cleanly

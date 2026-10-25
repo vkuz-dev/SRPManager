@@ -186,7 +186,10 @@ namespace AWLM.UI
             };
 
             shortcutsLayout.Controls.Add(_chkDesktopShortcut);
-            shortcutsLayout.Controls.Add(_chkStartMenuShortcut);
+
+            // A package puts SRPManager in Start itself.
+            if (!PackageInfo.IsPackaged)
+                shortcutsLayout.Controls.Add(_chkStartMenuShortcut);
             grpShortcuts.Controls.Add(shortcutsLayout);
 
             rootLayout.RowCount++;
@@ -339,7 +342,7 @@ namespace AWLM.UI
             if (!_desktopShortcutManaged && _chkDesktopShortcut.Checked != _desktopShortcutPresent)
                 shortcutFailed |= !SettingsShortcuts.SetDesktopShortcut(_chkDesktopShortcut.Checked);
 
-            if (!_startMenuShortcutManaged && _chkStartMenuShortcut.Checked != _startMenuShortcutPresent)
+            if (!PackageInfo.IsPackaged && !_startMenuShortcutManaged && _chkStartMenuShortcut.Checked != _startMenuShortcutPresent)
                 shortcutFailed |= !SettingsShortcuts.SetStartMenuShortcut(_chkStartMenuShortcut.Checked);
 
             if (shortcutFailed)

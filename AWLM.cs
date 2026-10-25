@@ -35,6 +35,21 @@ namespace AWLM
             SettingsTrayPin.ApplyTrayPin();
             RefreshStatus();
 
+            // Shortcuts go stale when the exe moves (package update, exe <-> Store switch).
+            // Off the UI thread: a redirected Desktop can sit on a slow share.
+            Task.Run(() =>
+            {
+                try
+                {
+                    SettingsStartup.Refresh();
+                    SettingsShortcuts.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[AWLM] Refreshing shortcuts: {ex.Message}");
+                }
+            });
+
             _updateTimer = new Timer { Interval = LocalRefreshMs };
             _updateTimer.Tick += (s, e) => RefreshStatus();
             _updateTimer.Start();
@@ -142,7 +157,8 @@ namespace AWLM
         {
             var psi = new System.Diagnostics.ProcessStartInfo
             {
-                FileName = Application.ExecutablePath,
+                // The alias when packaged: starting the WindowsApps exe directly drops the package identity.
+                FileName = PackageInfo.LaunchPath,
                 UseShellExecute = true,
                 Verb = "runas"
             };
