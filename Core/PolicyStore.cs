@@ -10,6 +10,17 @@ namespace AWLM.Core
     {
         public const string PoliciesFolder = @"C:\Windows\AppLocker\Policies";
 
+        // Scratch space for files an elevated process reads back. %TEMP% is writable by the
+        // user's non-elevated processes, which could swap the file between write and use.
+        private const string AdminTempFolder = @"C:\Windows\AppLocker\Temp";
+
+        /// <summary>Path for <paramref name="fileName"/> in an admin-only folder. Requires elevation.</summary>
+        public static string AdminTempPath(string fileName)
+        {
+            Directory.CreateDirectory(AdminTempFolder);
+            return Path.Combine(AdminTempFolder, fileName);
+        }
+
         public static void CopyLocalPolicies()
         {
             try

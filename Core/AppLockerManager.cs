@@ -64,10 +64,11 @@ namespace AWLM.Core
             if (xml == null)
                 return new ApplyPolicyResult(false, resolveError);
 
-            string tempFile = Path.Combine(Path.GetTempPath(), $"applocker_policy_{Guid.NewGuid():N}.xml");
+            string tempFile = null;
 
             try
             {
+                tempFile = PolicyStore.AdminTempPath($"applocker_policy_{Guid.NewGuid():N}.xml");
                 File.WriteAllText(tempFile, xml, Encoding.UTF8);
 
                 CommandResult cmdResult = await CommandExecution.ExecuteCommandAsync(
@@ -115,8 +116,8 @@ namespace AWLM.Core
             }
             finally
             {
-                // The file holds the full policy XML, so don't leave a copy in %TEMP% per apply.
-                try { File.Delete(tempFile); }
+                // Don't leave a copy of the policy behind per apply.
+                try { if (tempFile != null) File.Delete(tempFile); }
                 catch (Exception ex)
                 {
                     Debug.WriteLine("[AppLockerPolicy] temp policy cleanup failed: " + ex.Message);

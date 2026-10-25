@@ -458,10 +458,11 @@ namespace AWLM.UI
         {
             const string ResourceName = "AWLM.Resources.Addons.AppLockerLocalRules.msc";
 
-            string tempPath = Path.Combine(Path.GetTempPath(), "AppLockerLocalRules.msc");
-
             try
             {
+                // Opened by an elevated mmc.exe, so it must not live in user-writable %TEMP%.
+                string tempPath = PolicyStore.AdminTempPath("AppLockerLocalRules.msc");
+
                 using (var stream = System.Reflection.Assembly.GetExecutingAssembly()
                                         .GetManifestResourceStream(ResourceName))
                 {
