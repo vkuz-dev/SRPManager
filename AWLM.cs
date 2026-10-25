@@ -24,6 +24,9 @@ namespace AWLM
         private bool _statusRefreshInFlight;
 
         private const string GitHubUrl = "https://github.com/vkuz-dev/SRPManager";
+        private const int LocalRefreshMs = 5_000;
+        private const int RemoteRefreshMs = 30_000;
+        private const int PostApplyRefreshMs = 5_000;
 
         // Construction / disposal
         public AWLM_App()
@@ -32,8 +35,7 @@ namespace AWLM
             SettingsTrayPin.ApplyTrayPin();
             RefreshStatus();
 
-            // Set up timer to refresh tray icon every 5 seconds
-            _updateTimer = new Timer { Interval = 5_000 };
+            _updateTimer = new Timer { Interval = LocalRefreshMs };
             _updateTimer.Tick += (s, e) => RefreshStatus();
             _updateTimer.Start();
         }
@@ -169,6 +171,10 @@ namespace AWLM
             _contextMenu = BuildMenu();
             _trayIcon.ContextMenuStrip = _contextMenu;
 
+            // Local polls are cheap (cached by registry hash); each remote poll is a WinRM session.
+            if (_updateTimer != null)
+                _updateTimer.Interval = _currentHost == null ? LocalRefreshMs : RemoteRefreshMs;
+
             if (wasFrozen && _freezeMenuItem != null)
                 _freezeMenuItem.Checked = true;
 
@@ -302,6 +308,10 @@ namespace AWLM
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+
+            // The state can settle late (GPUpdate, service start), and the remote timer is slow.
+            await Task.Delay(PostApplyRefreshMs);
+            RefreshStatus();
         }
 
         // Enable AppIDSvc
