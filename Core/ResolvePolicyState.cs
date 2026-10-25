@@ -112,7 +112,8 @@ namespace AWLM.Core
         {
             // A null hash means the registry read itself failed - don't cache on top of that,
             // so the next call falls back to a real poll instead of trusting a stale match.
-            if (hash == null)
+            // Unknown means the policy read failed - retry next time rather than pin it.
+            if (hash == null || state == PolicyState.Unknown)
                 return;
 
             lock (CacheLock)
@@ -208,7 +209,7 @@ namespace AWLM.Core
                 {
                     Debug.WriteLine("[AppLockerPolicy] GetEffectivePolicyXmlAsync: " +
                                     (result.ErrorMessage ?? "empty output"));
-                    return EmptyPolicyXml;
+                    return null;
                 }
 
                 return result.StandardOutput.Trim();
@@ -216,7 +217,7 @@ namespace AWLM.Core
             catch (Exception ex)
             {
                 Debug.WriteLine("[AppLockerPolicy] GetEffectivePolicyXmlAsync: " + ex.Message);
-                return EmptyPolicyXml;
+                return null;
             }
         }
 
@@ -240,7 +241,7 @@ namespace AWLM.Core
                 {
                     Debug.WriteLine("[AppLockerPolicy] GetEffectivePolicyXml: " +
                                     (error ?? "empty output"));
-                    return EmptyPolicyXml;
+                    return null;
                 }
 
                 return output.Trim();
@@ -248,7 +249,7 @@ namespace AWLM.Core
             catch (Exception ex)
             {
                 Debug.WriteLine("[AppLockerPolicy] GetEffectivePolicyXml: " + ex.Message);
-                return EmptyPolicyXml;
+                return null;
             }
         }
 
@@ -339,8 +340,6 @@ namespace AWLM.Core
                     string.Equals(r.Attribute("UserOrGroupSid")?.Value, "S-1-1-0", StringComparison.Ordinal) &&
                     r.Descendants("FilePathCondition")
                      .Any(c => string.Equals(c.Attribute("Path")?.Value, "*", StringComparison.Ordinal)));
-
-        private const string EmptyPolicyXml = "<AppLockerPolicy Version=\"1\"/>";
     }
 
     public enum PolicyState

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -13,31 +12,26 @@ namespace AWLM.Utilities
         // ────────────────────────────────────────────────────────────────────
         // Rule retrieval and parsing
         // ────────────────────────────────────────────────────────────────────
+        /// <summary>
+        /// Throws when the policy cannot be read, so callers can tell a failure apart from
+        /// a policy that simply has no rules.
+        /// </summary>
         public static List<AppLockerRuleInfo> GetRules(string machineName = null)
         {
-            bool isRemote = !string.IsNullOrWhiteSpace(machineName);
             var rules = new List<AppLockerRuleInfo>();
-            try
-            {
-                string xml = ResolvePolicyState.GetEffectivePolicyXml(machineName);
-                var doc = XDocument.Parse(xml);
 
-                foreach (var coll in doc.Descendants("RuleCollection"))
-                {
-                    string type = coll.Attribute("Type")?.Value ?? "Unknown";
-                    string mode = coll.Attribute("EnforcementMode")?.Value ?? "NotConfigured";
-                    ParseRuleElements(coll, "FilePathRule", type, mode, rules);
-                    ParseRuleElements(coll, "FilePublisherRule", type, mode, rules);
-                    ParseRuleElements(coll, "FileHashRule", type, mode, rules);
-                }
-            }
-            catch (Exception ex)
+            string xml = ResolvePolicyState.GetEffectivePolicyXml(machineName)
+                ?? throw new InvalidOperationException(
+                    "Could not read the effective AppLocker policy (Get-AppLockerPolicy failed).");
+            var doc = XDocument.Parse(xml);
+
+            foreach (var coll in doc.Descendants("RuleCollection"))
             {
-                Debug.WriteLine("[AppLockerPolicy] GetRules: " + ex.Message);
-                // Local failures render as an empty rule set — the grid showing "0 rules" is
-                // honest when AppLocker is simply not configured. Remote failures rethrow so
-                // AppLockerRulesForm can distinguish them from a machine that is unreachable.
-                if (isRemote) throw;
+                string type = coll.Attribute("Type")?.Value ?? "Unknown";
+                string mode = coll.Attribute("EnforcementMode")?.Value ?? "NotConfigured";
+                ParseRuleElements(coll, "FilePathRule", type, mode, rules);
+                ParseRuleElements(coll, "FilePublisherRule", type, mode, rules);
+                ParseRuleElements(coll, "FileHashRule", type, mode, rules);
             }
             return rules;
         }

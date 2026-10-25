@@ -185,7 +185,16 @@ namespace AWLM.Core
             }
 
             Console.WriteLine("Reading the effective AppLocker policy...");
-            List<AppLockerRuleInfo> rules = GetAppLockerRules.GetRules();
+            List<AppLockerRuleInfo> rules;
+            try
+            {
+                rules = GetAppLockerRules.GetRules();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed: " + ex.Message);
+                return;
+            }
 
             if (rules.Count == 0)
             {
