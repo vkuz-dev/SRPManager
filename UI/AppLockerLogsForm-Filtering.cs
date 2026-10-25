@@ -36,7 +36,9 @@ namespace AWLM.UI
 
             if (_hideSystemEventsCheckBox.Checked)
             {
-                filtered = filtered.Where(e =>
+                // Only hide allowed noise: blocked System32 binaries (mshta, wmic, ...) are
+                // exactly what the Enable policy denies, and must stay visible.
+                filtered = filtered.Where(e => e.Action != "Allowed" ||
                     !(e.FilePath.EndsWith("conhost.exe", StringComparison.OrdinalIgnoreCase) ||
                     e.FilePath.EndsWith("Pester.psd1", StringComparison.OrdinalIgnoreCase) ||
                     e.FilePath.EndsWith("Pester.psm1", StringComparison.OrdinalIgnoreCase) ||
