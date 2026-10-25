@@ -300,17 +300,17 @@ namespace AWLM.UI
             string columnValue = GetColumnValue(e);
             if (columnValue == null) return false;
 
-            string cv = columnValue.ToLowerInvariant();
-            string fv = Value.ToLowerInvariant();
+            // OrdinalIgnoreCase avoids two lowercase copies per row per filter.
+            const StringComparison cmp = StringComparison.OrdinalIgnoreCase;
 
             switch (Operator)
             {
-                case FilterOperator.Contains: return cv.Contains(fv);
-                case FilterOperator.NotContains: return !cv.Contains(fv);
-                case FilterOperator.Equals: return cv == fv;
-                case FilterOperator.NotEquals: return cv != fv;
-                case FilterOperator.StartsWith: return cv.StartsWith(fv);
-                case FilterOperator.EndsWith: return cv.EndsWith(fv);
+                case FilterOperator.Contains: return columnValue.IndexOf(Value, cmp) >= 0;
+                case FilterOperator.NotContains: return columnValue.IndexOf(Value, cmp) < 0;
+                case FilterOperator.Equals: return string.Equals(columnValue, Value, cmp);
+                case FilterOperator.NotEquals: return !string.Equals(columnValue, Value, cmp);
+                case FilterOperator.StartsWith: return columnValue.StartsWith(Value, cmp);
+                case FilterOperator.EndsWith: return columnValue.EndsWith(Value, cmp);
                 case FilterOperator.Regex:
                     try
                     {
