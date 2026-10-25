@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Win32;
 
@@ -17,6 +19,22 @@ namespace AWLM.Utilities
         /// </summary>
         public static bool? ReadFlag(string valueName)
         {
+            foreach (object val in ReadAll(valueName))
+            {
+                try { return Convert.ToInt32(val) != 0; }
+                catch (Exception) { /* malformed — fall through to the next hive */ }
+            }
+
+            return null;
+        }
+
+        /// <summary>The first string value accepted by <paramref name="isValid"/>, or null.</summary>
+        public static string ReadString(string valueName, Func<string, bool> isValid) =>
+            ReadAll(valueName).OfType<string>().FirstOrDefault(isValid);
+
+        private static List<object> ReadAll(string valueName)
+        {
+            var values = new List<object>();
             foreach (RegistryKey hive in new[] { Registry.CurrentUser, Registry.LocalMachine })
             {
                 try
@@ -25,7 +43,7 @@ namespace AWLM.Utilities
                     {
                         object val = key?.GetValue(valueName);
                         if (val != null)
-                            return Convert.ToInt32(val) != 0;
+                            values.Add(val);
                     }
                 }
                 catch (Exception ex)
@@ -33,8 +51,7 @@ namespace AWLM.Utilities
                     System.Diagnostics.Debug.WriteLine($"[SettingsRegistry] {hive.Name}\\{valueName}: {ex.Message}");
                 }
             }
-
-            return null;
+            return values;
         }
     }
 }
