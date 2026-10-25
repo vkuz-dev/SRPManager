@@ -27,7 +27,7 @@ Policy version: 2026-04-20 -->
         <FilePathCondition Path="%WINDIR%\tracing\*" />
 
         <!-- Custom rules -->
-        <FilePathCondition Path="%WINDIR%\*\regsrv32.exe" />
+        <FilePathCondition Path="%WINDIR%\*\regsvr32.exe" />
 
         <!-- Microsoft recommended exclusions (apps that can be used to bypass AppLocker) -->
         <!-- https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol -->
@@ -87,7 +87,7 @@ Policy version: 2026-04-20 -->
       </Conditions>
       <Exceptions>
         <!-- Custom rules -->
-        <FilePathCondition Path="%WINDIR%\*\regsrv32.exe" />
+        <FilePathCondition Path="%WINDIR%\*\regsvr32.exe" />
         
         <!-- Microsoft recommended exclusions (apps that can be used to bypass AppLocker) -->
         <!-- https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol -->
