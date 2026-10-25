@@ -85,22 +85,7 @@ namespace AWLM.Core
                     return new ApplyPolicyResult(false, error);
                 }
 
-                // Verify that something has changed before writing to the log
-                PolicyState stateAfterApply = stateBeforeApply;
-                for (int i = 0; i < 5; i++)
-                {
-                    await Task.Delay(1000);
-
-                    var current = await ResolvePolicyState.DetectCurrentPolicyAsync();
-                    if (current != PolicyState.Unknown)
-                        stateAfterApply = current;
-
-                    if (stateAfterApply != stateBeforeApply)
-                        break;
-                }
-
-                if (stateAfterApply != PolicyState.Unknown && stateAfterApply != stateBeforeApply)
-                    WriteAuditLog(stateBeforeApply, stateAfterApply);
+                await WaitForStateChangeAndAuditAsync(stateBeforeApply, ResolvePolicyState.DetectCurrentPolicyAsync);
 
                 return new ApplyPolicyResult(true, null);
             }
@@ -185,22 +170,14 @@ namespace AWLM.Core
                     return new ApplyPolicyResult(false, error);
                 }
 
-                // Verify that something has changed before writing to the log
-                PolicyState stateAfterApply = stateBeforeApply;
-                for (int i = 0; i < 5; i++)
-                {
-                    await Task.Delay(1000);
-
-                    RemoteStatusSnapshot snapshot = await RemoteStatusChecker.GetSnapshotAsync(machineName);
-                    if (snapshot.Success && snapshot.State != PolicyState.Unknown)
-                        stateAfterApply = snapshot.State;
-
-                    if (stateAfterApply != stateBeforeApply)
-                        break;
-                }
-
-                if (stateAfterApply != PolicyState.Unknown && stateAfterApply != stateBeforeApply)
-                    WriteAuditLog(stateBeforeApply, stateAfterApply, machineName);
+                PolicyState stateAfterApply = await WaitForStateChangeAndAuditAsync(
+                    stateBeforeApply,
+                    async () =>
+                    {
+                        RemoteStatusSnapshot snapshot = await RemoteStatusChecker.GetSnapshotAsync(machineName);
+                        return snapshot.Success ? snapshot.State : PolicyState.Unknown;
+                    },
+                    machineName);
 
                 // e.g. the NotConfigured policy on a target with no domain AppLocker GPO
                 if (stateBeforeApply != PolicyState.Unknown && stateAfterApply == stateBeforeApply)
@@ -215,6 +192,32 @@ namespace AWLM.Core
                 Debug.WriteLine("[AppLockerPolicy] ApplyPolicyRemoteAsync exception: " + ex.Message);
                 return new ApplyPolicyResult(false, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Polls up to 5 s for the state to move off <paramref name="before"/>, audits a change,
+        /// and returns the last known state.
+        /// </summary>
+        private static async Task<PolicyState> WaitForStateChangeAndAuditAsync(
+            PolicyState before, Func<Task<PolicyState>> detect, string targetMachine = null)
+        {
+            PolicyState after = before;
+            for (int i = 0; i < 5; i++)
+            {
+                await Task.Delay(1000);
+
+                PolicyState current = await detect();
+                if (current != PolicyState.Unknown)
+                    after = current;
+
+                if (after != before)
+                    break;
+            }
+
+            if (after != PolicyState.Unknown && after != before)
+                WriteAuditLog(before, after, targetMachine);
+
+            return after;
         }
 
         public static string ResolveEnablePolicyFileName(bool isRemoteTarget = false) =>
