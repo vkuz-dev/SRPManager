@@ -60,7 +60,7 @@ namespace AWLM.Core
                 Success = true,
                 AppIdSvcRunning = appIdSvcRunning,
                 DllFilteringActive = dll == "1" || dll == "2",
-                // Mirrors ResolvePolicyState.DetectCurrentPolicy(): AppIDSvc down means Off
+                // Mirrors ResolvePolicyState.DetectCurrentPolicyAsync(): AppIDSvc down means Off
                 // regardless of what the effective policy XML says.
                 State = appIdSvcRunning ? ResolvePolicyState.CheckXml(xml) : PolicyState.Off
             };

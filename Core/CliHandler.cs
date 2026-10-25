@@ -31,7 +31,7 @@ namespace AWLM.Core
                     return;
 
                 case "-status":
-                    HandleStatus();
+                    await HandleStatus();
                     return;
 
                 case "-enable":
@@ -64,9 +64,9 @@ namespace AWLM.Core
             }
         }
 
-        private static void HandleStatus()
+        private static async Task HandleStatus()
         {
-            PolicyState state = ResolvePolicyState.DetectCurrentPolicy();
+            PolicyState state = await ResolvePolicyState.DetectCurrentPolicyAsync();
             bool dllActive = StatusChecker.IsDllFilteringActive();
             bool appIdSvc = StatusChecker.IsAppIDSvcRunning();
             bool isAdmin = StatusChecker.IsProcessElevated();
@@ -92,7 +92,7 @@ namespace AWLM.Core
             AppLockerManager.ApplyPolicyResult result = await AppLockerManager.ApplyPolicyAsync(policyFile, force);
 
             if (result.Success)
-                Console.WriteLine("Done. New state: " + ResolvePolicyState.DetectCurrentPolicy());
+                Console.WriteLine("Done. New state: " + await ResolvePolicyState.DetectCurrentPolicyAsync());
             else if (result.Frozen)
                 Console.WriteLine("AppLocker is frozen. Use -force to override.");
             else
@@ -106,7 +106,7 @@ namespace AWLM.Core
             AppLockerManager.ApplyPolicyResult result = await AppLockerManager.ApplyPolicyAsync("AppLocker-Disable.xml");
 
             if (result.Success)
-                Console.WriteLine("Done. New state: " + ResolvePolicyState.DetectCurrentPolicy());
+                Console.WriteLine("Done. New state: " + await ResolvePolicyState.DetectCurrentPolicyAsync());
             else
                 Console.WriteLine("Failed: " + result.Error);
         }

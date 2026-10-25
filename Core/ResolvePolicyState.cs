@@ -38,34 +38,6 @@ namespace AWLM.Core
         private static readonly HashSet<string> RelevantCollections =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Exe", "Msi", "Script" };
 
-        public static PolicyState DetectCurrentPolicy()
-        {
-            try
-            {
-                if (!StatusChecker.IsAppIDSvcRunning())
-                    return PolicyState.Off;
-
-                string hash = GetSrpV2PolicyHash();
-                if (TryGetCachedState(hash, out PolicyState cached))
-                    return cached;
-
-                PolicyState state = CheckXml(GetEffectivePolicyXml());
-                UpdateCache(hash, state);
-                return state;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("[AppLockerManager] DetectCurrentPolicy: " + ex.Message);
-                return PolicyState.Unknown;
-            }
-        }
-
-
-        /// <summary>
-        /// Async counterpart of <see cref="DetectCurrentPolicy"/>. Use this from the UI —
-        /// the sync version spawns powershell.exe on the calling thread, which freezes the
-        /// tray for the duration of the round-trip.
-        /// </summary>
         public static async Task<PolicyState> DetectCurrentPolicyAsync()
         {
             try
@@ -221,37 +193,11 @@ namespace AWLM.Core
             }
         }
 
-        public static string GetEffectivePolicyXml(string machineName = null)
-        {
-            if (!string.IsNullOrWhiteSpace(machineName))
-                return GetEffectivePolicyXmlRemote(machineName);
-
-            try
-            {
-                string output;
-                string error;
-
-                bool success = CommandExecution.ExecuteCommand(
-                    "powershell.exe",
-                    EffectivePolicyArgs,
-                    out output,
-                    out error);
-
-                if (!success || string.IsNullOrWhiteSpace(output))
-                {
-                    Debug.WriteLine("[AppLockerPolicy] GetEffectivePolicyXml: " +
-                                    (error ?? "empty output"));
-                    return null;
-                }
-
-                return output.Trim();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("[AppLockerPolicy] GetEffectivePolicyXml: " + ex.Message);
-                return null;
-            }
-        }
+        /// <summary>Blocking. Call only off the UI thread (worker thread or CLI).</summary>
+        public static string GetEffectivePolicyXml(string machineName = null) =>
+            string.IsNullOrWhiteSpace(machineName)
+                ? GetEffectivePolicyXmlAsync().GetAwaiter().GetResult()
+                : GetEffectivePolicyXmlRemote(machineName);
 
         private static string GetEffectivePolicyXmlRemote(string machineName)
         {

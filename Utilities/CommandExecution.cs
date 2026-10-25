@@ -2,9 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace AWLM.Utilities
@@ -46,98 +44,6 @@ namespace AWLM.Utilities
 
             return "\"" + escaped + "\"";
         }
-
-        /// <summary>
-        /// Runs a command to completion and captures its output.
-        /// </summary>
-        /// <param name="fileName">The executable to run</param>
-        /// <param name="arguments">Command line arguments</param>
-        /// <param name="output">Captured standard output on success</param>
-        /// <param name="errorMessage">Failure reason, or null on success</param>
-        /// <param name="timeoutMs">Wall-clock budget for the whole call</param>
-        /// <returns>True if the command exited with code 0 within the timeout</returns>
-        public static bool ExecuteCommand(
-            string fileName,
-            string arguments,
-            out string output,
-            out string errorMessage,
-            int timeoutMs = DefaultTimeoutMs)
-        {
-            output = null;
-            errorMessage = null;
-
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = fileName,
-                    Arguments = arguments,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
-                };
-
-                var stdOut = new StringBuilder();
-                var stdErr = new StringBuilder();
-
-                using (Process process = new Process { StartInfo = psi })
-                using (var stdOutClosed = new ManualResetEventSlim(false))
-                using (var stdErrClosed = new ManualResetEventSlim(false))
-                {
-                    // Pump both pipes on background threads. Reading one to completion before
-                    // touching the other deadlocks as soon as the child fills the other buffer.
-                    process.OutputDataReceived += (s, e) =>
-                    {
-                        if (e.Data == null) stdOutClosed.Set();
-                        else stdOut.AppendLine(e.Data);
-                    };
-                    process.ErrorDataReceived += (s, e) =>
-                    {
-                        if (e.Data == null) stdErrClosed.Set();
-                        else stdErr.AppendLine(e.Data);
-                    };
-
-                    process.Start();
-                    process.BeginOutputReadLine();
-                    process.BeginErrorReadLine();
-
-                    // The timeout has to cover the pipe drain too, not just process exit —
-                    // otherwise it can never fire, because a blocking read gets there first.
-                    var deadline = new Stopwatch();
-                    deadline.Start();
-
-                    bool completed =
-                        process.WaitForExit(timeoutMs) &&
-                        stdOutClosed.Wait(Remaining(deadline, timeoutMs)) &&
-                        stdErrClosed.Wait(Remaining(deadline, timeoutMs));
-
-                    if (!completed)
-                    {
-                        try { process.Kill(); } catch { /* raced with exit */ }
-                        errorMessage = $"Command timed out after {timeoutMs}ms and was terminated.";
-                        return false;
-                    }
-
-                    if (process.ExitCode != 0)
-                    {
-                        errorMessage = $"Command failed with exit code {process.ExitCode}. {stdErr}";
-                        return false;
-                    }
-
-                    output = stdOut.ToString();
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-                return false;
-            }
-        }
-
-        private static int Remaining(Stopwatch elapsed, int timeoutMs) =>
-            (int)Math.Max(0, timeoutMs - elapsed.ElapsedMilliseconds);
 
         public static async Task<CommandResult> ExecuteCommandAsync(
             string fileName,
