@@ -95,6 +95,8 @@ namespace AWLM.UI
         private List<AppLockerFileEvent> _pendingFileSummaryResult;
         private List<AppLockerAppxEvent> _pendingAppxSummaryResult;
 
+        /// <summary>The one time format for grid cells and filters, so a search matches what is shown.</summary>
+        internal static string FormatTime(DateTime t) => t.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
 
         private void RestartQuickFilter()
         {
@@ -108,7 +110,7 @@ namespace AWLM.UI
         {
             // ToString() is called once per event per filter run, not per term.
             // OrdinalIgnoreCase avoids creating any lowercase copies.
-            string timeStr = e.TimeCreated.ToString();
+            string timeStr = FormatTime(e.TimeCreated);
             string eventIdStr = e.EventId.ToString();
 
             foreach (var term in terms)
@@ -133,7 +135,7 @@ namespace AWLM.UI
 
         private static bool QuickFilterMatchAppx(AppLockerAppxEvent e, List<QuickFilterTerm> terms)
         {
-            string timeStr = e.TimeCreated.ToString();
+            string timeStr = FormatTime(e.TimeCreated);
             string eventIdStr = e.EventId.ToString();
 
             foreach (var term in terms)
@@ -325,7 +327,7 @@ namespace AWLM.UI
         {
             switch (Column)
             {
-                case "Time": return e.TimeCreated.ToString();
+                case "Time": return AppLockerLogsForm.FormatTime(e.TimeCreated);
                 case "Event ID": return e.EventId.ToString();
                 case "Action": return e.Action;
                 case "User": return e.User;

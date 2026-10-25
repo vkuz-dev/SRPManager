@@ -51,7 +51,7 @@ namespace AWLM.UI
                 grid,
                 getCellValue: (e, col) => col switch
                 {
-                    0 => (object)e.TimeCreated.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"),
+                    0 => (object)FormatTime(e.TimeCreated),
                     1 => e.EventId,
                     2 => e.Action,
                     3 => e.User,
