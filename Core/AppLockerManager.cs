@@ -211,6 +211,12 @@ namespace AWLM.Core
                         WriteAuditLog(isOn, machineName);
                 }
 
+                // e.g. the NotConfigured policy on a target with no domain AppLocker GPO
+                if (stateBeforeApply != PolicyState.Unknown && stateAfterApply == stateBeforeApply)
+                    return new ApplyPolicyResult(false,
+                        $"The policy was applied, but the state hasn't changed (still {stateAfterApply}). " +
+                        "Is AppLocker healthy on the target?");
+
                 return new ApplyPolicyResult(true, null);
             }
             catch (Exception ex)
