@@ -324,11 +324,13 @@ namespace AWLM.UI
             if (!_startupManaged)
                 SettingsStartup.SetStartup(_chkStartup.Checked);
 
-            // Tray pin
-            SettingsTrayPin.SaveTrayPin(_chkPinTray.Checked);
+            // Tray pin / remote actions — written only when changed, so an unrelated OK doesn't
+            // copy the HKLM fleet default into HKCU and shadow later HKLM changes.
+            if (_chkPinTray.Checked != _pinEnabled)
+                SettingsTrayPin.SaveTrayPin(_chkPinTray.Checked);
 
-            // Remote actions
-            SettingsRemoteManagement.SaveRemoteManagementEnabled(_chkRemoteManagement.Checked);
+            if (_chkRemoteManagement.Checked != _remoteManagementEnabled)
+                SettingsRemoteManagement.SaveRemoteManagementEnabled(_chkRemoteManagement.Checked);
 
             // Shortcuts — only touched when the user actually changed them, so an unrelated
             // OK never rewrites a shortcut the user placed by hand.
