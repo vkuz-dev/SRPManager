@@ -39,14 +39,13 @@ namespace AWLM.Core
                     await HandleEnable(args);
                     return;
 
-                case "-enable -force":
                 case "-ef":
                     await HandleEnable(new[] { "-enable", "-force" });
                     return;
 
                 case "-disable":
                 case "-d":
-                    await HandleDisable(args);
+                    await HandleDisable();
                     return;
 
                 case "-logs":
@@ -99,7 +98,7 @@ namespace AWLM.Core
                 Console.WriteLine("Failed: " + result.Error);
         }
 
-        private static async Task HandleDisable(string[] args)
+        private static async Task HandleDisable()
         {
             Console.WriteLine("Disabling AppLocker...");
 

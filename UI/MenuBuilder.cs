@@ -40,21 +40,6 @@ namespace AWLM.UI
         public ToolStripMenuItem EnableItem { get; set; }
         public ToolStripMenuItem DisableItem { get; set; }
 
-        // OLD APPROACH: hide the active state button, show available options
-
-        //     public void UpdateForState(PolicyState state)
-        //     {
-        //         EnableItem.Text     = Strings.Get("menu.enable");
-        //         EnableItem.Visible  = true;
-        //         DisableItem.Text    = Strings.Get("menu.disable");
-        //         DisableItem.Visible = true;
-
-        //         switch (state)
-        //         {
-        //             case PolicyState.On:  EnableItem.Visible  = false; break;
-        //             case PolicyState.Off: DisableItem.Visible = false; break;
-        //         }
-        //     }
         public void UpdateForState(PolicyState state, bool isRemoteTarget)
         {
             switch (state)
