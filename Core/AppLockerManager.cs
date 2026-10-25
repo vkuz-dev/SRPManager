@@ -99,13 +99,8 @@ namespace AWLM.Core
                         break;
                 }
 
-                if (stateAfterApply != PolicyState.Unknown)
-                {
-                    bool wasOn = stateBeforeApply == PolicyState.On;
-                    bool isOn = stateAfterApply == PolicyState.On;
-                    if (wasOn != isOn) // only log if there's a state change
-                        WriteAuditLog(isOn); // pass true if enabled, false if disabled
-                }
+                if (stateAfterApply != PolicyState.Unknown && stateAfterApply != stateBeforeApply)
+                    WriteAuditLog(stateBeforeApply, stateAfterApply);
 
                 return new ApplyPolicyResult(true, null);
             }
@@ -204,13 +199,8 @@ namespace AWLM.Core
                         break;
                 }
 
-                if (stateAfterApply != PolicyState.Unknown)
-                {
-                    bool wasOn = stateBeforeApply == PolicyState.On;
-                    bool isOn = stateAfterApply == PolicyState.On;
-                    if (wasOn != isOn) // only log if there's a state change
-                        WriteAuditLog(isOn, machineName);
-                }
+                if (stateAfterApply != PolicyState.Unknown && stateAfterApply != stateBeforeApply)
+                    WriteAuditLog(stateBeforeApply, stateAfterApply, machineName);
 
                 // e.g. the NotConfigured policy on a target with no domain AppLocker GPO
                 if (stateBeforeApply != PolicyState.Unknown && stateAfterApply == stateBeforeApply)
@@ -238,26 +228,25 @@ namespace AWLM.Core
         private const int EventIdEnabled = 1000;
         private const int EventIdDisabled = 1001;
 
-        private static void WriteAuditLog(bool enabled, string targetMachine = null)
+        /// <summary>
+        /// Logs any state change: 1000 when the new state is On, 1001 for anything weaker.
+        /// </summary>
+        private static void WriteAuditLog(PolicyState before, PolicyState after, string targetMachine = null)
         {
             try
             {
+                // A freshly created source is usable right away - don't drop the first event.
                 if (!EventLog.SourceExists(EventSource))
-                {
                     EventLog.CreateEventSource(EventSource, "Application");
-                    // Source registration takes effect after a restart — can't write yet.
-                    Debug.WriteLine("[AppLockerPolicy] WriteAuditLog: event source registered, " +
-                                    "log will appear on next run.");
-                    return;
-                }
 
                 string user = Environment.UserName;
                 string sid = WindowsIdentity.GetCurrent().User?.Value ?? "N/A";
+                bool enabled = after == PolicyState.On;
                 string action = enabled ? "Enabled" : "Disabled";
                 int eventId = enabled ? EventIdEnabled : EventIdDisabled;
 
                 string message =
-                    $"AppLocker was {action} via SRPManager.\r\n" +
+                    $"AppLocker was {action} via SRPManager ({before} -> {after}).\r\n" +
                     $"User:    {user}\r\n" +
                     $"SID:     {sid}\r\n" +
                     $"Machine: {Environment.MachineName}\r\n" +
