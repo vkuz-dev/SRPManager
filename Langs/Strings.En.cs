@@ -100,15 +100,15 @@ namespace AWLM.Core
             { "about.body",
                 "Current user: {user}\n\n" +
 
-                "Utility for monitoring and managing AppLocker state.\n\n" +
+                "A utility for monitoring and managing AppLocker state.\n\n" +
 
                 "Application whitelisting, when properly configured,\n" +
-                "can significantly improve system security by reducing the attack surface\n" + 
-                "and restricting execution to trusted software and paths.\n\n" +
+                "can significantly reduce the attack surface by\n " +
+                "restricting execution to trusted software and paths.\n\n" +
 
                 "Command-line usage is supported. Use /? for help.\n\n" +
 
-                "You can read more about the project, report issues or contribute on GitHub" +
+                "You can read more about the project, report issues or contribute on GitHub." +
 
                 "\n\n──── Developer ─────────────────────────\n" +
                 "Vladimir Kuznetsov\n" +
